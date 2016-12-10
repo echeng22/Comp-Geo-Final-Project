@@ -36,8 +36,6 @@ class MapDriver:
         axes = plt.gca()
         x_list = [x for [x, y] in robotPos]
         y_list = [y for [x, y] in robotPos]
-
-
         for i in range(len(robotPos)):
             circ = plt.Circle((x_list[i],y_list[i]), radius=10, color='b', fill=False)
             axes.add_patch(circ)
@@ -57,8 +55,8 @@ class MapDriver:
             for j in range(i+1, len(self.listRobots)):
                 robot2 = self.listRobots[j]
                 pos2 = np.asarray(robot2.getPosition())
-                distance = np.linalg.norm(pos1-pos2)
-                if distance < (robot1.getRadius() + robot2.getRadius() + 50):
+                distance = np.linalg.norm(np.asarray(pos1)-np.asarray(pos2))
+                if distance < (robot1.getRadius() + robot2.getRadius() + 40):
                     collisionCheck.append([robot1, robot2])
         return collisionCheck
 
@@ -67,16 +65,28 @@ class MapDriver:
 
 
 def main():
-    robot1 = Robot.robot(10, [-200,-200],[100,200],2, .01, True)
-    robot2 = Robot.robot(10, [-200, 200], [100, -200], 2, .01, False)
-    map = MapDriver([robot1, robot2], [-200,200,-200,200],.01)
+    # Working RUN 1
+    # robot1 = Robot.robot(10, [200, -200], [-200, 200], 5, .005, False)
+    # robot2 = Robot.robot(10, [200, 200], [-200, -200], 5, .005, True)
+    # robot1 = Robot.robot(10, [200, -200], [-200, 200], 5, .005, False)
+    # robot2 = Robot.robot(10, [0, 200], [-40, -200], 5, .005, True)
+    # robot1 = Robot.robot(10, [200, -200], [-200, 200], 5, .005, False)
+    # robot2 = Robot.robot(10, [0, 200], [-40, -200], 5, .005, True)
+    # robot3 = Robot.robot(10, [-200, -200], [20, 200], 5, .005, True)
+    robot1 = Robot.robot(10, [200, -200], [-200, 200], 5, .005, False)
+    robot2 = Robot.robot(10, [0, 200], [-40, -200], 5, .005, True)
+    robot3 = Robot.robot(10, [-200, -200], [20, 200], 5, .005, True)
+    robot4 = Robot.robot(10, [-200, 50], [200, -70], 5, .003, True)
+    map = MapDriver([robot1,robot2, robot3, robot4], [-200,200,-200,200],.01)
     time = 700
     t_count = 0
     while t_count < time:
         print t_count
+        listCollision = []
         listCollision = map.checkCollisions()
         print listCollision
         map.update(listCollision)
+
         map.mapClear()
 
         t_count = t_count + 1
